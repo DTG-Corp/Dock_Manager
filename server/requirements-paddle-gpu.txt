@@ -1,5 +1,12 @@
 # Install BEFORE torch (separate index). See Dockerfile + gpu-pytorch-conda-setup skill.
-# cu126 wheel: paddle 3.x lives on cu12x index (cu120 tops out at 2.6.2). Runs under CUDA 12.8.
---index-url https://www.paddlepaddle.org.cn/packages/stable/cu126/
---extra-index-url https://pypi.org/simple
-paddlepaddle-gpu==3.3.0
+# PyPI là index CHÍNH (nvidia-*-cu12 + deps phụ tải nhanh), mirror paddle chỉ là EXTRA INDEX
+# để lấy đúng paddlepaddle-gpu. Nếu để mirror paddle làm index chính, pip sẽ kéo cả
+# nvidia-cublas/cudnn/nccl (hàng trăm MB) từ mirror Trung Quốc -> rất chậm, có lúc treo
+# (RemoteDisconnected, log build đứng hàng chục phút).
+#
+# cu129 (không phải cu126): paddle build cho CUDA 12.6 KHÔNG có kernel cho sm_120
+# (RTX 50xx / Blackwell). Trên máy dùng RTX 50xx, suy luận GPU không báo lỗi mà trả
+# kết quả RỖNG âm thầm -> OCR không đọc được biển số. Phải dùng wheel cu129 trở lên.
+--index-url https://pypi.org/simple
+--extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cu129/
+paddlepaddle-gpu==3.3.1

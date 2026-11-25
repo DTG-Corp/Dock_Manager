@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Rebuild bason-dock: Python 3.12 + Paddle GPU 3 + PyTorch cu124 + app deps.
+# Rebuild bason-dock: Python 3.12 + Paddle GPU 3 + PyTorch cu128 + app deps.
 set -eo pipefail
 
 ENV_NAME="${CONDA_ENV_NAME:-bason-dock}"
 SERVER_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PADDLE_INDEX="${PADDLE_INDEX:-https://www.paddlepaddle.org.cn/packages/stable/cu126/}"
-TORCH_INDEX="${TORCH_INDEX:-https://download.pytorch.org/whl/cu124}"
+TORCH_INDEX="${TORCH_INDEX:-https://download.pytorch.org/whl/cu128}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$ENV_NAME"
@@ -29,7 +29,7 @@ echo "==> Install Paddle GPU 3"
 echo "==> Install PaddleOCR 3"
 "$PIP" install --no-cache-dir "paddleocr>=3.3.0,<4"
 
-echo "==> Install PyTorch cu124"
+echo "==> Install PyTorch cu128"
 "$PIP" install --no-cache-dir \
   --index-url "$TORCH_INDEX" \
   torch torchvision
