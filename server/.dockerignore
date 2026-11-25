@@ -4,8 +4,29 @@ __pycache__
 *.pyo
 *.pyd
 .Python
-.env.local
-.env.*.local
+# Secrets — COPY . . sẽ nhét .env vào layer image
+.env
+.env.*
+!.env.example
+# Model weight + engine: lấy qua bind mount ./models và ./vendor
+models/
+vendor/
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tar.xz
+# Dữ liệu runtime của máy khác — KHÔNG đưa vào image
+app/data-docker/
+app/runtime-media/
+snapshot/
+.cudnn8/
+server/.cudnn8/
+data/
+logs/
+runs/
+exports/
+*.log
 .git
 .gitignore
 .venv
@@ -14,9 +35,6 @@ env/
 *.egg-info/
 dist/
 build/
-*.log
-runs/
-exports/
 .pytest_cache/
 .coverage
 htmlcov/

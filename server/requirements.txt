@@ -1,7 +1,9 @@
 fastapi
 uvicorn[standard]
 wsproto>=1.2.0
-sqlalchemy
+# SQLAlchemy 2.1 đổi driver mặc định của `postgresql://` sang psycopg 3 (image chỉ có
+# psycopg2-binary) -> pin dưới 2.1 cho tới khi thêm psycopg[binary].
+sqlalchemy>=2.0.36,<2.1
 psycopg2-binary
 alembic
 pydantic-settings

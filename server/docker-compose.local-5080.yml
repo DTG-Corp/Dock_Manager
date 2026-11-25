@@ -1,0 +1,186 @@
+# docker-compose.local-5080.yml — chạy Dock_Manager (repo local) trên máy RTX 5080.
+#
+# Vì sao cần file riêng thay cho docker-compose.yml:
+#   1. docker-compose.yml bind mount ./app/data-docker/* sang /mnt/d (9p): 9p không giữ
+#      permission -> Postgres chết ("data directory has invalid permissions"). Ở đây dùng
+#      named volume (ext4) cho pgdata/miniodata/redisdata/qdrantdata.
+#   2. Model + engine + vendor ffmpeg nằm trong repo nhưng KHÔNG nằm trong image
+#      (.dockerignore chặn) -> mount ./models, ./vendor.
+#   3. PREFER_ENGINE = true: app dùng .engine trong ./models (yolo26s_finetuned.engine,
+#      dinov2 engine) và tự lùi về .pt nếu engine không deserialize/mở được context trên
+#      máy này. Kiểm tra bằng log startup hoặc `make verify-engines`.
+#
+# Chạy:
+#   cd server
+#   docker compose -f docker-compose.local-5080.yml --profile docker-app build
+#   docker compose -f docker-compose.local-5080.yml --profile docker-app up -d
+name: dock_manager_local
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
+    command: server /data --console-address ":9001"
+    ports:
+      - "9100:9000"
+      - "9101:9001"
+    volumes:
+      # Dữ liệu MinIO ghi thẳng ra thư mục dự án trên ổ D (thấy/copy/backup file trực tiếp,
+      # dùng lại được dữ liệu bucket cũ 7.9 GB). Đánh đổi: qua 9p/DrvFs chậm hơn ext4 và
+      # không bảo đảm permission/fsync — chấp nhận cho MinIO (ghi file thường), KHÔNG áp dụng
+      # cho Postgres (9p làm hỏng quyền thư mục dữ liệu -> Postgres không khởi động được).
+      - ./app/data-docker/minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Tạo bucket: dùng chính image app (minio/mc đã bị xoá khỏi Docker Hub 11/09/2026)
+  minio-init:
+    image: dock-manager-local:cu129
+    restart: "no"
+    env_file: .env
+    # .env trỏ 127.0.0.1:9100 (dùng cho chạy native trên host) -> trong container phải là minio:9000
+    environment:
+      MINIO_ENDPOINT: minio:9000
+      MINIO_SECURE: "false"
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: ["python", "/opt/init/minio_init_docker.py"]
+    volumes:
+      - ./scripts/minio_init_docker.py:/opt/init/minio_init_docker.py:ro
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:v1.18.2
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrantdata:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/6333'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dock-manager-local:cu129
+    restart: unless-stopped
+    profiles: ["docker-app"]
+    env_file: .env
+    # .env trỏ 127.0.0.1 (dành cho chạy native trên host) -> trong container phải ghi đè
+    environment:
+      POSTGRES_HOST: db
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_HOST: qdrant
+      MINIO_ENDPOINT: minio:9000
+      MINIO_SECURE: "false"
+      AWS_ENDPOINT_URL: http://minio:9000
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility,video
+      # Dùng .engine có sẵn trong ./models (app tự kiểm tra engine_usable() rồi lùi về .pt
+      # nếu engine không mở được trên máy này — app/services/ai/trt_engine.py)
+      YOLO_PREFER_ENGINE: "true"
+      VISUAL_PREFER_ENGINE: "true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app
+      - ./runs:/app/runs
+      - ./exports:/app/exports
+      - ./vendor:/app/vendor
+      - ./models:/app/models
+      - model-cache:/root/.cache
+      - paddlex-cache:/root/.paddlex
+    shm_size: "2gb"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # Client SPA (React/Vite) phục vụ bằng nginx: dùng bản build ../client/dist + proxy /api -> app:8080
+  # (kèm WebSocket cho live preview). Cùng profile docker-app với service `app`.
+  # Build lại client khi source đổi: pnpm build trong client/ (xem Dock_Manager-setup.md mục 16).
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    profiles: ["docker-app"]
+    depends_on:
+      - app
+    ports:
+      - "8090:80"
+    volumes:
+      - ../client/dist:/usr/share/nginx/html:ro
+      - ./deploy/nginx-client.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      # 127.0.0.1 chứ không phải localhost: busybox wget trong alpine ưu tiên IPv6 (::1)
+      # mà nginx chỉ listen IPv4 -> healthcheck báo "Connection refused".
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/nginx-health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  # miniodata: KHÔNG dùng nữa — MinIO đã chuyển sang bind mount ./app/data-docker/minio (xem service minio).
+  # Volume dock_manager_local_miniodata (328 K, bucket media rỗng) vẫn còn trên Docker; xoá bằng:
+  #   docker volume rm dock_manager_local_miniodata
+  redisdata:
+  qdrantdata:
+  model-cache:
+  paddlex-cache:
