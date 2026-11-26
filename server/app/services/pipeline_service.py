@@ -2524,13 +2524,18 @@ class PipelineService:
         import cv2
         results = []
         
-        # Load detector if not loaded
+        # Load detector if not loaded.
+        # Dùng cấu hình runtime (model_path/device/conf/yolo_imgsz trong port_configs) và KHÔNG
+        # truyền target_classes cứng: engine TensorRT build tĩnh theo yolo_imgsz nên để mặc định
+        # 640 sẽ lỗi "input size ... not equal to max model size", còn [8] là class 'boat' của
+        # COCO (sai với model fine-tune 1 class 'boat' ở index 0).
         if self._detector is None:
+            runtime_cfg = self._load_runtime_config()
             self._detector, _ = load_yolo_detector(
-                settings.MODEL_PATH, 
-                settings.DEVICE, 
-                settings.CONF, 
-                [8]
+                runtime_cfg['model_path'],
+                runtime_cfg['device'],
+                runtime_cfg['conf'],
+                imgsz=int(runtime_cfg['yolo_imgsz']),
             )
 
         def on_removed_test(tb, hist):
