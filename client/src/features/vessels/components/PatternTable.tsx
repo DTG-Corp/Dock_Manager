@@ -129,9 +129,6 @@ export const PatternTable: React.FC = () => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Patterns được thử theo thứ tự priority giảm dần. OCR result khớp pattern đầu tiên sẽ được dùng.
-        </p>
         <Button type="button" onClick={openAdd} className="flex items-center gap-1 text-xs px-3 py-1.5">
           <Plus className="w-3.5 h-3.5" /> Thêm pattern
         </Button>

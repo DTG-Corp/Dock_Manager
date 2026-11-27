@@ -444,7 +444,7 @@ export const PortConfigsSection: React.FC<PortConfigsSectionProps> = ({
             return (
               <div
                 key={cat.id}
-                className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-white/5 rounded-2xl shadow-2xl overflow-hidden"
+                className="relative bg-white dark:bg-[#121214] border border-gray-200 dark:border-white/5 rounded-2xl shadow-2xl"
               >
                 <button
                   type="button"
@@ -453,18 +453,18 @@ export const PortConfigsSection: React.FC<PortConfigsSectionProps> = ({
                 >
                   <div className="flex items-center gap-3">
                     <span
+                      tabIndex={0}
+                      role="img"
+                      aria-label={`Mô tả nhóm ${cat.label}: ${cat.description}`}
                       className={cn(
-                        'inline-flex items-center px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider',
+                        'group relative inline-flex items-center px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
                         cat.color,
                       )}
                     >
                       {cat.label}
-                    </span>
-                    <span className="text-[10px] text-gray-400 dark:text-gray-500 hidden sm:inline">
-                      {cat.description}
-                    </span>
-                    <span className="text-[10px] font-mono text-gray-400 ml-1">
-                      ({items.length})
+                      <span className="pointer-events-none absolute left-full top-1/2 z-20 ml-2 w-64 -translate-y-1/2 rounded-lg bg-gray-900 px-3 py-2 text-left text-[11px] font-normal normal-case leading-relaxed tracking-normal text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:bg-white dark:text-gray-900">
+                        {cat.description}
+                      </span>
                     </span>
                   </div>
                   {isCollapsed ? (

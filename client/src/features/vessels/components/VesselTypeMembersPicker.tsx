@@ -92,11 +92,6 @@ export const VesselTypeMembersPicker: React.FC<VesselTypeMembersPickerProps> = (
           Đã chọn {selectedIds.length}
         </span>
       </div>
-      <p className="text-[10px] normal-case tracking-normal text-gray-400">
-        Tick tàu để gán vào loại này (tàu sẽ thành «tàu tháng»). Bỏ tick để gỡ (về «chưa phân
-        loại»). Danh sách gồm tàu tháng và tàu chưa phân loại; không có tàu lẻ.
-      </p>
-
       <div className="relative">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
         <input

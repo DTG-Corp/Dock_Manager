@@ -86,9 +86,6 @@ export const RecognitionConfigSection: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Cấu hình nhận diện mã tàu từ OCR — thay đổi có hiệu lực trong tối đa 30 giây hoặc sau khi nhấn Reload.
-        </p>
         <div className="flex items-center gap-3">
           {reloadMsg ? (
             <span className="text-xs text-emerald-600 dark:text-emerald-400">{reloadMsg}</span>

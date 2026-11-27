@@ -54,9 +54,6 @@ export const OcrLabPanel: React.FC = () => {
           <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
             Test OCR (pipeline service)
           </h3>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Upload ảnh crop biển số hoặc vùng chữ — dùng cùng PaddleOCR + rule engine như pipeline live.
-          </p>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end">

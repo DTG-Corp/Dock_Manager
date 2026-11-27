@@ -156,7 +156,6 @@ export const SingleCameraListView: React.FC = () => {
           <h2 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
             Camera đơn
           </h2>
-          <p className="text-xs text-gray-500">Quản lý RTSP camera dùng cho pipeline và camera group.</p>
         </div>
         <Button
           type="button"

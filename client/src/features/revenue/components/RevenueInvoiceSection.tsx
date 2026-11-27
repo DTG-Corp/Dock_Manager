@@ -39,7 +39,6 @@ import {
   renderInvoiceRefFeesCell,
 } from './revenue-invoice-display';
 import { InvoiceDiscountStatusIcon } from './InvoiceDiscountStatusIcon';
-import { PageScopeNotice } from './PageScopeNotice';
 import { SortableTh } from '../../../components/SortableTh/SortableTh';
 import {
   useTableSort,
@@ -588,7 +587,6 @@ export const RevenueInvoiceSection: React.FC<RevenueInvoiceSectionProps> = ({
                 </Button>
               )}
             </div>
-            <PageScopeNotice shownCount={payableCount} filteredTotal={total} action="payment" />
           </div>
         )}
       </div>

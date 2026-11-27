@@ -135,9 +135,6 @@ export const GroupCamTestPanel: React.FC = () => {
           <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
             Group Cam Test
           </h3>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Import nhiều video quay cùng thời điểm để replay pipeline theo từng frame, xem preview từng camera hoặc fused layout.
-          </p>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[260px_160px_1fr]">

@@ -208,12 +208,6 @@ export const RevenueFeesSection: React.FC<RevenueFeesSectionProps> = ({
           <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">
             {feeScope === 'spot' ? 'Bảng Giá Phí Tàu Lẻ' : 'Bảng Giá Phí Loại Tàu Tháng'}
           </h3>
-          <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 max-w-xl leading-relaxed">
-            <span className="font-bold text-gray-700 dark:text-gray-300">Tạm dừng áp dụng:</span>{' '}
-            chỉnh sửa cấu hình và bỏ chọn «Đang áp dụng» — bản ghi vẫn còn, có thể bật lại.{' '}
-            <span className="font-bold text-gray-700 dark:text-gray-300">Xóa:</span> nút trên thẻ — xóa
-            hẳn khỏi hệ thống.
-          </p>
         </div>
         {feeScope === 'monthly' ? (
           <Button
@@ -224,11 +218,7 @@ export const RevenueFeesSection: React.FC<RevenueFeesSectionProps> = ({
             <Plus className="w-4 h-4 mr-2" />
             Thêm Cấu Hình
           </Button>
-        ) : (
-          <p className="text-xs text-gray-500 dark:text-gray-400 sm:text-right">
-            Cấu hình phí tàu lẻ quản lý trong chi tiết từng tàu.
-          </p>
-        )}
+        ) : null}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

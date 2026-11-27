@@ -45,9 +45,6 @@ export const FusionCanvas: React.FC<{
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-white">Layout Canvas</p>
-          <p className="text-[11px] text-white/50">
-            UI layer only - fused pixels are rendered by backend preview.
-          </p>
         </div>
         <p className="font-mono text-[11px] text-white/50">
           {canvasWidth} x {canvasHeight}

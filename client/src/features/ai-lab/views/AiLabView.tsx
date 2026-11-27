@@ -22,9 +22,6 @@ export const AiLabView: React.FC = () => {
             <h1 className="text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               AI Lab — Kiểm tra &amp; so sánh
             </h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Test nhận diện, OCR pipeline và tra cứu embedding Qdrant
-            </p>
           </div>
         </div>
 

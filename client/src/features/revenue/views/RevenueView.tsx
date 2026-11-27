@@ -486,7 +486,7 @@ export const RevenueView: React.FC = () => {
   const handleDeleteFee = async (fee: FeeConfigRead) => {
     if (
       !window.confirm(
-        'Xóa vĩnh viễn cấu hình phí này khỏi cơ sở dữ liệu? Hành động không hoàn tác. (Muốn chỉ tạm ngừng định giá, dùng checkbox «Đang áp dụng» khi chỉnh sửa.)',
+        'Xóa vĩnh viễn cấu hình phí này khỏi cơ sở dữ liệu? Hành động không hoàn tác.',
       )
     ) {
       return;
@@ -563,9 +563,8 @@ export const RevenueView: React.FC = () => {
 
   const handleExportInvoicesFiltered = async () => {
     // Server chỉ trả một trang, nên «Xuất theo filter» xuất đúng các dòng đang tải
-    // (trang hiện tại + bộ lọc/sub-tab hiện tại) — khớp phần đếm trên modal, và modal
-    // nói rõ phạm vi khi `total > số dòng đang tải` (`PageScopeNotice`). Muốn xuất
-    // toàn bộ tập lọc thì phải có endpoint xuất-theo-bộ-lọc ở server (xem báo cáo).
+    // (trang hiện tại + bộ lọc/sub-tab hiện tại). Muốn xuất toàn bộ tập lọc thì
+    // phải có endpoint xuất-theo-bộ-lọc ở server (xem báo cáo).
     if (invoices.length === 0) {
       return;
     }
@@ -723,7 +722,6 @@ export const RevenueView: React.FC = () => {
         onClose={() => setIsBulkSepayModalOpen(false)}
         invoices={payableInvoices}
         hasActiveFilters={invFilterCount > 0}
-        filteredTotal={invoicesTotal}
         onPaid={() => {
           // Nạp lại đúng trang đang xem sau khi hoá đơn được thanh toán.
           reloadInvoices();

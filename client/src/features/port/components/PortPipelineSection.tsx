@@ -41,20 +41,9 @@ export const PortPipelineSection: React.FC<PortPipelineSectionProps> = ({
         <h3 className="text-lg font-bold text-gray-900 dark:text-white uppercase tracking-widest">
           Điều Khiển AI Core
         </h3>
-        <p className="text-xs text-gray-500 uppercase tracking-widest">
-          Khởi chạy hoặc dừng luồng xử lý nhận diện tàu
-        </p>
       </div>
 
       <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/[0.03] p-6 space-y-5">
-        <div>
-          <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
-            Khởi chạy pipeline
-          </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
-            Chỉ hỗ trợ chạy theo Camera Group để đồng bộ multi-camera và Seam Anchor.
-          </p>
-        </div>
         <div>
           <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300">
             Camera Group

@@ -72,9 +72,6 @@ export const ConvertMapTable: React.FC = () => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Khi OCR nhận diện ra giá trị sai, hệ thống sẽ tự thay bằng giá trị đúng.
-        </p>
         <Button type="button" onClick={openAdd} className="flex items-center gap-1 text-xs px-3 py-1.5">
           <Plus className="w-3.5 h-3.5" /> Thêm mapping
         </Button>

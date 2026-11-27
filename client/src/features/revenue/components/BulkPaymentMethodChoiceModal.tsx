@@ -3,7 +3,6 @@ import { Banknote, QrCode } from 'lucide-react';
 import { Modal } from '../../../components/Modal/Modal';
 import { cn } from '../../../utils/cn';
 import { formatMoney } from './revenue-invoice-display';
-import { PageScopeNotice } from './PageScopeNotice';
 import type { PaymentMethodChoice } from './PaymentMethodChoiceModal';
 
 export type BulkPaymentMethodChoiceModalProps = {
@@ -52,12 +51,6 @@ export const BulkPaymentMethodChoiceModal: React.FC<BulkPaymentMethodChoiceModal
             {formatMoney(totalAmount)} ₫
           </p>
         </div>
-
-        <PageScopeNotice
-          shownCount={invoiceCount}
-          filteredTotal={filteredTotal ?? invoiceCount}
-          action="payment"
-        />
 
         <div className="grid gap-3 sm:grid-cols-2">
           <button

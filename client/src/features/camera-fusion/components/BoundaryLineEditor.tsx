@@ -349,12 +349,6 @@ export const BoundaryLineEditor: React.FC<Props> = ({ cameraId }) => {
         <p className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300">
           Vẽ đường biên (camera {cameraId})
         </p>
-        <p className="text-xs text-gray-500">
-          Vùng nhận (đa giác xanh): IN khi ≥{Math.round(bboxCrossThreshold * 100)}% bbox trong
-          vùng <strong>và</strong> bbox chạm L1 rồi L2. OUT khi &lt;
-          {Math.round(bboxCrossThreshold * 100)}% trong vùng sau IN (không xét line). Mỗi track tối
-          đa 1 IN/OUT; chỉ tạo detection khi đã IN hợp lệ.
-        </p>
       </div>
 
       <div className="mb-4">
@@ -399,9 +393,6 @@ export const BoundaryLineEditor: React.FC<Props> = ({ cameraId }) => {
             className="mt-1 w-full rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-white/10 dark:bg-[#1a1a1c]"
           />
         </div>
-        <p className="text-xs text-gray-500 sm:col-span-2">
-          Box nhỏ hơn ngưỡng bị loại trước tracking (mặc định 50×30 px).
-        </p>
         <div className="sm:col-span-2">
           <Button
             onClick={handleSaveDetectionSettings}

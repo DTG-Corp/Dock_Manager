@@ -3,7 +3,6 @@ import { Banknote, Loader2 } from 'lucide-react';
 import { Modal } from '../../../components/Modal/Modal';
 import { Button } from '../../../components/Button/Button';
 import { formatMoney } from './revenue-invoice-display';
-import { PageScopeNotice } from './PageScopeNotice';
 
 export type BulkPaymentConfirmModalProps = {
   isOpen: boolean;
@@ -60,12 +59,6 @@ export const BulkPaymentConfirmModal: React.FC<BulkPaymentConfirmModalProps> = (
             {formatMoney(totalAmount)} ₫
           </p>
         </div>
-
-        <PageScopeNotice
-          shownCount={invoiceCount}
-          filteredTotal={filteredTotal ?? invoiceCount}
-          action="payment"
-        />
 
         <p className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400">
           Ghi nhận thanh toán đủ số tiền còn lại cho từng hóa đơn (kể cả thanh toán một phần).

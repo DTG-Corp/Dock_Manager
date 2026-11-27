@@ -34,18 +34,12 @@ export const FusionGroupListView: React.FC<{ compact?: boolean }> = ({ compact =
               <h2 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
                 Group Camera
               </h2>
-              <p className="text-xs text-gray-500">
-                Cấu hình layout canvas và kiểu xử lý cho multi-camera detection.
-              </p>
             </div>
           ) : (
             <div>
               <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
                 Camera Fusion Groups
               </h1>
-              <p className="text-sm text-gray-500">
-                Cấu hình layout canvas và kiểu xử lý cho multi-camera detection.
-              </p>
             </div>
           )}
           <Link to={`${PATHS.CAMERA_FUSION}/new`}>
