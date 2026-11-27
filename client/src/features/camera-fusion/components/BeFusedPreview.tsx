@@ -60,17 +60,9 @@ export const BeFusedPreview: React.FC<{
       <div className="flex min-h-[220px] items-center justify-center overflow-hidden rounded-xl bg-black">
         {url ? (
           <img src={url} alt="Backend fused preview" className="max-h-[420px] w-full object-contain" />
-        ) : (
-          <p className="px-6 text-center text-xs text-white/50">
-            Backend preview sẽ xuất hiện sau khi chọn camera và BE đọc được frame.
-          </p>
-        )}
+        ) : null}
       </div>
       {error ? <p className="mt-2 text-[11px] text-red-300">{error}</p> : null}
-      <p className="mt-2 text-[10px] uppercase tracking-widest text-blue-100/60">
-        Source of truth: ảnh này được render bởi backend bằng cùng fuser dùng cho YOLO.
-        {isConnected ? ' WebSocket live.' : ''}
-      </p>
     </div>
   );
 };

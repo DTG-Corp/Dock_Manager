@@ -3,7 +3,6 @@ import { FileSpreadsheet, Loader2 } from 'lucide-react';
 import { Modal } from '../../../components/Modal/Modal';
 import { Button } from '../../../components/Button/Button';
 import { cn } from '../../../utils/cn';
-import { PageScopeNotice } from './PageScopeNotice';
 
 export type RevenueExcelExportScope = 'all' | 'filtered';
 
@@ -68,12 +67,6 @@ export const RevenueExcelExportChoiceModal: React.FC<RevenueExcelExportChoiceMod
               : `${matchedCountLabel} · Khớp filter: ${filteredCount}`}
           </p>
         </div>
-
-        <PageScopeNotice
-          shownCount={filteredCount}
-          filteredTotal={tabCount}
-          action="export"
-        />
 
         <div className="grid gap-3 sm:grid-cols-2">
           <Button

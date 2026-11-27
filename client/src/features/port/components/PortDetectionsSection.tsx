@@ -647,7 +647,7 @@ export const PortDetectionsSection: React.FC<PortDetectionsSectionProps> = ({
                   Chỉnh sửa nhận diện
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Tàu: {getDetectionShipLabel(editDet)} · Track: {editDet.track_id ?? '—'}
+                  Track: {editDet.track_id ?? '—'}
                 </p>
               </div>
               <button
@@ -729,10 +729,6 @@ export const PortDetectionsSection: React.FC<PortDetectionsSectionProps> = ({
                   className={cn(filterControlClass, 'mt-1 normal-case')}
                 />
               </label>
-
-              <p className="rounded-lg bg-amber-500/10 px-3 py-2 text-[11px] normal-case text-amber-600 dark:text-amber-400">
-                Lưu thay đổi sẽ tự động tính lại hóa đơn AI của nhận diện này (trừ khi hóa đơn đã thanh toán).
-              </p>
 
               {editError && (
                 <p className="text-[12px] normal-case text-red-500">{editError}</p>

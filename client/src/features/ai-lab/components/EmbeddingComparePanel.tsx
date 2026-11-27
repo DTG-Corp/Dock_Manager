@@ -54,9 +54,6 @@ export const EmbeddingComparePanel: React.FC = () => {
           <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
             So sánh embedding (Qdrant)
           </h3>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Kéo thả ảnh crop tàu — trích DINOv2 embedding, gom top-K theo mã tàu và kiểm tra consensus.
-          </p>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end">

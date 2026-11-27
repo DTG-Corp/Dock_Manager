@@ -292,13 +292,6 @@ export const DashboardAiAnalyticsCharts: React.FC<DashboardAiAnalyticsChartsProp
             <h3 className="text-xs font-bold uppercase tracking-widest text-gray-900 dark:text-white">
               Phân tích dữ liệu nhận diện
             </h3>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 max-w-xl">
-              Trạng thái duyệt, top tàu, phân bố độ tin cậy và lượt nhận diện tổng hợp theo kỳ{' '}
-              <span className="font-semibold">{periodLabelVi(summaryPeriod)}</span> (múi giờ VN); chỉ khi API
-              summary thiếu chuỗi khối lượng theo kỳ thì biểu đồ lượt nhận diện mới dùng cửa sổ cuộn 24 giờ
-              qua. Số liệu do server tổng hợp trên toàn bộ dữ liệu trong kỳ, không đếm trên mảng nhận diện mà
-              sidebar tải. Tab «Xem trực tiếp» — luồng camera.
-            </p>
           </div>
         </div>
         <Button
@@ -334,11 +327,6 @@ export const DashboardAiAnalyticsCharts: React.FC<DashboardAiAnalyticsChartsProp
               ? detectionVolumeChartTitle(summaryPeriod)
               : DETECTION_VOLUME_FALLBACK_TITLE}
           </p>
-          <p className="text-[9px] text-gray-500 dark:text-gray-400 px-1 mb-2 leading-snug">
-            {volumeSeries.fromSummary
-              ? `Kỳ: ${periodLabelVi(summaryPeriod)} (múi giờ VN) — trục thời gian theo đúng nút ngày/tháng/năm ở trên.`
-              : 'Cửa sổ cuộn 24 giờ gần nhất, nhãn là giờ địa phương — không đổi theo nút ngày/tháng/năm ở trên (API summary chưa có chuỗi khối lượng theo kỳ).'}
-          </p>
           <ReactApexChart
             options={areaOptions}
             series={[{ name: 'Lượt nhận diện', data: volumeSeries.data }]}
@@ -350,9 +338,6 @@ export const DashboardAiAnalyticsCharts: React.FC<DashboardAiAnalyticsChartsProp
         <div className="lg:col-span-2 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.02] p-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5 px-1">
             {boundaryCrossingChartTitle(summaryPeriod)}
-          </p>
-          <p className="text-[9px] text-gray-500 dark:text-gray-400 px-1 mb-2 leading-snug">
-            INPUT = vượt line vào · OUTPUT = vượt line ra · Kỳ: {periodLabelVi(summaryPeriod)} (múi giờ VN)
           </p>
           {!boundarySeries.hasData ? (
             <p className="py-16 text-center text-xs font-mono uppercase tracking-wide text-gray-500">
@@ -375,19 +360,12 @@ export const DashboardAiAnalyticsCharts: React.FC<DashboardAiAnalyticsChartsProp
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5 px-1">
             Trạng thái duyệt (kỳ: {periodLabelVi(summaryPeriod)})
           </p>
-          <p className="text-[9px] text-gray-500 dark:text-gray-400 px-1 mb-2 leading-snug">
-            Đếm theo cùng kỳ ngày / tháng / năm đã chọn phía trên dashboard (Asia/Ho_Chi_Minh).
-          </p>
           <ReactApexChart options={donutOptions} series={acceptance.series} type="donut" height={300} />
         </div>
 
         <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.02] p-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5 px-1">
             Mã tàu xuất hiện nhiều (top 8 — theo {periodLabelVi(summaryPeriod)})
-          </p>
-          <p className="text-[9px] text-gray-500 dark:text-gray-400 px-1 mb-2 leading-snug">
-            Xếp hạng theo kỳ (ngày / tháng / năm) đã chọn trên dashboard; server tổng hợp trên toàn bộ dữ
-            liệu trong kỳ, không phải mẫu 18 dòng mới nhất của sidebar.
           </p>
           {topShips.labels.length === 0 ? (
             <p className="py-16 text-center text-xs font-mono uppercase tracking-wide text-gray-500">
@@ -406,9 +384,6 @@ export const DashboardAiAnalyticsCharts: React.FC<DashboardAiAnalyticsChartsProp
         <div className="lg:col-span-2 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.02] p-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5 px-1">
             Phân bố độ tin cậy (confidence)
-          </p>
-          <p className="text-[9px] text-gray-500 dark:text-gray-400 px-1 mb-2 leading-snug">
-            Theo kỳ: {periodLabelVi(summaryPeriod)} — server tổng hợp trên toàn bộ dữ liệu trong kỳ (Asia/Ho_Chi_Minh).
           </p>
           <ReactApexChart
             options={columnConfOptions}

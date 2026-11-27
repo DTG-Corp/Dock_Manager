@@ -42,10 +42,6 @@ export const BlacklistSection: React.FC = () => {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        Các giá trị OCR trong danh sách này sẽ bị loại bỏ hoàn toàn, không đưa vào bình chọn.
-      </p>
-
       <form onSubmit={(e) => void handleAdd(e)} className="flex gap-2 items-start">
         <div className="flex-1 space-y-1.5">
           <input

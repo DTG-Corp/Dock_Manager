@@ -501,16 +501,6 @@ export const VesselsView: React.FC = () => {
                 pagedVessels.find((v) => String(v.id) === editingId)?.ship_id
               }
             />
-          ) : editingId && editingVesselClassification === 'monthly' ? (
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Tàu tháng dùng phí theo <strong>Loại Tàu</strong>. Cấu hình giá tại{' '}
-              <strong>Doanh Thu › Cấu Hình Phí</strong> (gắn theo loại tàu).
-            </p>
-          ) : editingId ? (
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Tàu <strong>chưa phân loại</strong> không sinh hóa đơn. Đổi sang Tàu Lẻ hoặc
-              Tàu Tháng để cấu hình phí.
-            </p>
           ) : null
         }
         isLoading={isLoading}

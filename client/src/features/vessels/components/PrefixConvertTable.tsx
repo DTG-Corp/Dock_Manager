@@ -78,8 +78,6 @@ export const PrefixConvertTable: React.FC = () => {
       <div className="flex items-start justify-between gap-3">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Đổi tiền tố (2 chữ đầu) khi OCR đọc nhầm, giữ nguyên phần số. Ví dụ SC-8168 → SG-8168.
-          Áp dụng cho mọi biển bắt đầu bằng tiền tố nguồn. Convert Map (khớp cả biển) được ưu
-          tiên hơn nếu trùng.
         </p>
         <Button type="button" onClick={openAdd} className="flex items-center gap-1 text-xs px-3 py-1.5 shrink-0">
           <Plus className="w-3.5 h-3.5" /> Thêm quy tắc

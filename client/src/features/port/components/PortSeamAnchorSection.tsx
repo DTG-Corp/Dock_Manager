@@ -1,5 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { Anchor, Loader2, RotateCcw, Save, AlertTriangle } from 'lucide-react';
+import {
+  Anchor,
+  AlertTriangle,
+  ChevronDown,
+  ChevronRight,
+  Loader2,
+  RotateCcw,
+  Save,
+} from 'lucide-react';
 import { Button } from '../../../components/Button/Button';
 import { cn } from '../../../utils/cn';
 import type { PortConfigRead } from '../services/portApi';
@@ -268,6 +276,7 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
   const [saving, setSaving] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<FieldDef['group']>>(new Set());
 
   const currentValues = useMemo<Draft>(() => buildCurrentValues(configs), [configs]);
 
@@ -295,6 +304,18 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
 
   const handleChange = (field: FieldDef, value: string) => {
     setOverrides((prev) => ({ ...prev, [field.key]: value }));
+  };
+
+  const toggleGroup = (groupId: FieldDef['group']) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) {
+        next.delete(groupId);
+      } else {
+        next.add(groupId);
+      }
+      return next;
+    });
   };
 
   const handleToggle = (field: FieldDef, checked: boolean) => {
@@ -351,20 +372,17 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
     <div className="space-y-4">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-white/5 dark:bg-[#121214]">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-blue-600/10 p-2.5">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600/10">
               <Anchor className="h-5 w-5 text-blue-600" />
             </div>
-            <div>
-              <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
+            <div className="min-w-0">
+              <h3 className="truncate text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
                 Seam Anchor — Tham số neo tàu
               </h3>
-              <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
-                Áp dụng cho group hybrid (≥ 2 camera). Thay đổi có hiệu lực ở lần khởi động pipeline kế tiếp.
-              </p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
             <Button
               type="button"
               onClick={handleResetDefaults}
@@ -413,14 +431,38 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
       {GROUPS.map((group) => (
         <div
           key={group.id}
-          className="rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-white/5 dark:bg-[#121214]"
+          className="relative rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-white/5 dark:bg-[#121214]"
         >
-          <div className="border-b border-gray-200 px-6 py-4 dark:border-white/5">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-900 dark:text-white">
+          <button
+            type="button"
+            onClick={() => toggleGroup(group.id)}
+            className="flex w-full items-center justify-between border-b border-gray-200 px-6 py-4 text-left hover:bg-gray-50 dark:border-white/5 dark:hover:bg-white/[0.02]"
+          >
+            <span
+              tabIndex={0}
+              role="img"
+              aria-label={`Mô tả nhóm ${group.label}: ${group.description}`}
+              className={cn(
+                'group relative inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                group.id === 'lifecycle'
+                  ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-300'
+                  : group.id === 'revalidation'
+                    ? 'border-purple-200 bg-purple-50 text-purple-600 dark:border-purple-500/30 dark:bg-purple-500/10 dark:text-purple-300'
+                    : 'border-amber-200 bg-amber-50 text-amber-600 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300',
+              )}
+            >
               {group.label}
-            </h4>
-            <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">{group.description}</p>
-          </div>
+              <span className="pointer-events-none absolute left-full top-1/2 z-20 ml-2 w-64 -translate-y-1/2 rounded-lg bg-gray-900 px-3 py-2 text-left text-[11px] font-normal normal-case leading-relaxed tracking-normal text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:bg-white dark:text-gray-900">
+                {group.description}
+              </span>
+            </span>
+            {collapsedGroups.has(group.id) ? (
+              <ChevronRight className="h-4 w-4 shrink-0 text-gray-400" />
+            ) : (
+              <ChevronDown className="h-4 w-4 shrink-0 text-gray-400" />
+            )}
+          </button>
+          {!collapsedGroups.has(group.id) && (
           <div className="divide-y divide-gray-100 dark:divide-white/5">
             {FIELDS.filter((f) => f.group === group.id).map((field) => {
               const value = draft[field.key] ?? field.default;
@@ -433,9 +475,21 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-[11px] font-bold uppercase tracking-widest text-gray-900 dark:text-white">
-                        {field.label}
-                      </p>
+                      <span
+                        tabIndex={0}
+                        role="img"
+                        aria-label={`Tên biến: ${field.key}`}
+                        className="group relative inline-flex outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      >
+                        <span className="text-[11px] font-bold uppercase tracking-widest text-gray-900 dark:text-white">
+                          {field.label}
+                        </span>
+                        <span className="pointer-events-auto absolute left-0 top-full z-20 pt-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                          <span className="block cursor-text select-text whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-left font-mono text-[10px] font-normal normal-case tracking-normal text-white shadow-xl dark:bg-white dark:text-gray-900">
+                            {field.key}
+                          </span>
+                        </span>
+                      </span>
                       {dirty ? (
                         <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-amber-500">
                           chưa lưu
@@ -443,11 +497,8 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
                       ) : null}
                     </div>
                     <p className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">{field.description}</p>
-                    <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-gray-400">
-                      {field.key}
-                    </p>
                   </div>
-                  <div className="flex items-center gap-3 md:w-72 md:justify-end">
+                  <div className="flex items-center justify-end gap-3 md:w-72 md:shrink-0">
                     {field.kind === 'bool' ? (
                       <label className="inline-flex cursor-pointer items-center gap-2">
                         <input
@@ -478,6 +529,11 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
                       </label>
                     ) : (
                       <div className="flex items-center gap-2">
+                        {field.min != null || field.max != null ? (
+                          <span className="text-[9px] font-mono uppercase tracking-widest text-gray-400">
+                            {field.min ?? '−∞'}–{field.max ?? '+∞'}
+                          </span>
+                        ) : null}
                         <input
                           type="number"
                           value={value}
@@ -493,11 +549,6 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
                               : 'border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 dark:border-white/10',
                           )}
                         />
-                        {field.min != null || field.max != null ? (
-                          <span className="text-[9px] font-mono uppercase tracking-widest text-gray-400">
-                            {field.min ?? '−∞'}–{field.max ?? '+∞'}
-                          </span>
-                        ) : null}
                       </div>
                     )}
                   </div>
@@ -505,6 +556,7 @@ export const PortSeamAnchorSection: React.FC<PortSeamAnchorSectionProps> = ({
               );
             })}
           </div>
+          )}
         </div>
       ))}
     </div>

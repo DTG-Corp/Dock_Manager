@@ -2,7 +2,7 @@ import { useMemo, type FC } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import { TrendingUp } from 'lucide-react';
-import type { DashboardPeriod, DashboardSummary } from '../../../types/api.types';
+import type { DashboardSummary } from '../../../types/api.types';
 import { useHtmlDarkClass } from '../hooks/use-html-dark-class';
 
 function apexCommon(isDark: boolean): Partial<ApexOptions> {
@@ -28,16 +28,6 @@ function apexCommon(isDark: boolean): Partial<ApexOptions> {
     dataLabels: { enabled: false },
     plotOptions: { bar: { borderRadius: 3, columnWidth: '72%' } },
   };
-}
-
-function periodChartTitle(period: DashboardPeriod): string {
-  if (period === 'day') {
-    return 'Thu nhập theo giờ (HĐ trong ngày)';
-  }
-  if (period === 'month') {
-    return 'Thu nhập theo ngày trong tháng';
-  }
-  return 'Thu nhập theo tháng trong năm';
 }
 
 export type DashboardRevenueSidebarChartsProps = {
@@ -107,10 +97,6 @@ export const DashboardRevenueSidebarCharts: FC<DashboardRevenueSidebarChartsProp
           <h4 className="text-gray-900 dark:text-white font-bold uppercase tracking-widest text-xs">
             Phân tích thu nhập
           </h4>
-          <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-            {summary ? periodChartTitle(summary.period) : 'Chọn kỳ (ngày / tháng / năm) ở trên.'} Tổng
-            hóa đơn (chưa xóa) theo mốc tạo HĐ, chia AI và thủ công/đơn hàng.
-          </p>
         </div>
       </div>
 

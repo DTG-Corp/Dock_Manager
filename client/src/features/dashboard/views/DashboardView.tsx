@@ -15,13 +15,6 @@ import { DashboardAiFeedPanel } from '../components/DashboardAiFeedPanel';
 import { DashboardPeriodToggle } from '../components/DashboardPeriodToggle';
 import { DashboardRecentDetectionsSidebar } from '../components/DashboardRecentDetectionsSidebar';
 import { DashboardRevenueSidebarCharts } from '../components/DashboardRevenueSidebarCharts';
-import type { DashboardPeriod } from '../../../types/api.types';
-
-const PERIOD_SUB: Record<DashboardPeriod, string> = {
-  day: 'Kỳ: hôm nay',
-  month: 'Kỳ: tháng này',
-  year: 'Kỳ: năm nay',
-};
 
 function moneyVi(n: number | string | null | undefined): string {
   return `${Number(n ?? 0).toLocaleString('vi-VN')} ₫`;
@@ -97,8 +90,6 @@ export const DashboardView: React.FC = () => {
     return () => window.removeEventListener('pipeline-status-changed', handlePipelineChanged);
   }, [fetchDashboardData, refreshPipelineStatus]);
 
-  const periodSubtitle = PERIOD_SUB[summaryPeriod];
-
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -117,7 +108,6 @@ export const DashboardView: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Tàu / mã nhận diện (distinct)"
-          subtitle={periodSubtitle}
           value={summary?.distinct_ships_detected ?? 0}
           icon={ScanSearch}
           color="bg-blue-600 shadow-lg shadow-blue-600/20"
@@ -125,7 +115,6 @@ export const DashboardView: React.FC = () => {
         />
         <StatCard
           label="Phí vãn lai (theo giờ)"
-          subtitle={periodSubtitle}
           value={moneyVi(summary?.transient_fee_revenue)}
           icon={Coins}
           color="bg-emerald-600 shadow-lg shadow-emerald-600/20"
@@ -133,7 +122,6 @@ export const DashboardView: React.FC = () => {
         />
         <StatCard
           label="Hóa đơn tự động (AI)"
-          subtitle={periodSubtitle}
           value={summary?.auto_invoices_created ?? 0}
           icon={Sparkles}
           color="bg-violet-600 shadow-lg shadow-violet-600/20"
@@ -152,7 +140,6 @@ export const DashboardView: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatCard
           label="INPUT (vượt line vào)"
-          subtitle={periodSubtitle}
           value={summary?.boundary_in_total ?? 0}
           icon={LogIn}
           color="bg-teal-600 shadow-lg shadow-teal-600/20"
@@ -160,7 +147,6 @@ export const DashboardView: React.FC = () => {
         />
         <StatCard
           label="OUTPUT (vượt line ra)"
-          subtitle={periodSubtitle}
           value={summary?.boundary_out_total ?? 0}
           icon={LogOut}
           color="bg-rose-600 shadow-lg shadow-rose-600/20"

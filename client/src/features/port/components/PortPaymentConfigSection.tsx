@@ -113,30 +113,6 @@ function buildCurrentValues(configs: PortConfigRead[]): Draft {
   return map;
 }
 
-function StatusPill({ ok, label }: { ok: boolean; label: string }) {
-  return (
-    <span
-      className={cn(
-        'rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest',
-        ok
-          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
-          : 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
-      )}
-    >
-      {ok ? '✓' : '!'} {label}
-    </span>
-  );
-}
-
-function StatusPills({ bankReady, apiReady }: { bankReady: boolean; apiReady: boolean }) {
-  return (
-    <div className="mt-2 flex flex-wrap gap-2">
-      <StatusPill ok={bankReady} label="TK ngân hàng" />
-      <StatusPill ok={apiReady} label="Token API" />
-    </div>
-  );
-}
-
 export const PortPaymentConfigSection: React.FC<PortPaymentConfigSectionProps> = ({
   configs,
   isLoading,
@@ -170,10 +146,6 @@ export const PortPaymentConfigSection: React.FC<PortPaymentConfigSectionProps> =
       return overriden !== currentValues[field.key];
     }).map((f) => f.key);
   }, [overrides, currentValues]);
-
-  const bankReady =
-    Boolean(draft.sepay_bank_account?.trim()) && Boolean(draft.sepay_bank_name?.trim());
-  const apiReady = Boolean(draft.sepay_api_token?.trim());
 
   const handleChange = (key: string, value: string) => {
     setOverrides((prev) => ({ ...prev, [key]: value }));
@@ -226,13 +198,10 @@ export const PortPaymentConfigSection: React.FC<PortPaymentConfigSectionProps> =
   return (
     <div className="space-y-4">
       <PaymentHeaderCard
-        bankReady={bankReady}
-        apiReady={apiReady}
         saving={saving}
         dirtyCount={dirtyKeys.length}
         error={error}
         lastSavedAt={lastSavedAt}
-        syncIntervalSec={draft.sepay_sync_interval_sec || '30'}
         onResetDefaults={handleResetDefaults}
         onReset={handleReset}
         onSave={handleSave}
@@ -247,7 +216,6 @@ export const PortPaymentConfigSection: React.FC<PortPaymentConfigSectionProps> =
             <h4 className="text-xs font-bold uppercase tracking-widest text-gray-900 dark:text-white">
               {group.label}
             </h4>
-            <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">{group.description}</p>
           </div>
           <div className="divide-y divide-gray-100 dark:divide-white/5">
             {FIELDS.filter((f) => f.group === group.id).map((field) => {
@@ -285,24 +253,18 @@ export const PortPaymentConfigSection: React.FC<PortPaymentConfigSectionProps> =
 };
 
 function PaymentHeaderCard({
-  bankReady,
-  apiReady,
   saving,
   dirtyCount,
   error,
   lastSavedAt,
-  syncIntervalSec,
   onResetDefaults,
   onReset,
   onSave,
 }: {
-  bankReady: boolean;
-  apiReady: boolean;
   saving: boolean;
   dirtyCount: number;
   error: string | null;
   lastSavedAt: Date | null;
-  syncIntervalSec: string;
   onResetDefaults: () => void;
   onReset: () => void;
   onSave: () => void;
@@ -310,21 +272,17 @@ function PaymentHeaderCard({
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-white/5 dark:bg-[#121214]">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
-          <div className="rounded-xl bg-emerald-600/10 p-2.5">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10">
             <CreditCard className="h-5 w-5 text-emerald-600" />
           </div>
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
+          <div className="min-w-0">
+            <h3 className="truncate text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
               Cấu hình thanh toán SEPay
             </h3>
-            <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
-              QR chuyển khoản và đồng bộ SEPay API tự xác nhận hóa đơn trong Quản lý thu nhập.
-            </p>
-            <StatusPills bankReady={bankReady} apiReady={apiReady} />
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <Button
             type="button"
             onClick={onResetDefaults}
@@ -367,18 +325,6 @@ function PaymentHeaderCard({
         <SavedAtBanner lastSavedAt={lastSavedAt} />
       ) : null}
 
-      <div className="mt-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 dark:border-white/5 dark:bg-white/[0.02]">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-          Đồng bộ SEPay API
-        </p>
-        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
-          Server poll mỗi <span className="font-mono font-bold">{syncIntervalSec}s</span>. Crontab:{' '}
-          <span className="font-mono text-[10px]">server/scripts/sepay_sync_cron.sh</span>
-        </p>
-        <p className="mt-2 text-[10px] text-gray-500 dark:text-gray-400">
-          Nội dung CK / mã SEPay phải khớp <span className="font-mono">invoice_number</span>.
-        </p>
-      </div>
     </div>
   );
 }
@@ -404,8 +350,6 @@ function FieldMeta({ field, dirty }: { field: FieldDef; dirty: boolean }) {
           </span>
         ) : null}
       </div>
-      <p className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">{field.description}</p>
-      <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-gray-400">{field.key}</p>
     </>
   );
 }

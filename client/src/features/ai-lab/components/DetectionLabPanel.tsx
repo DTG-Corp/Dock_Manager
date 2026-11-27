@@ -97,9 +97,6 @@ export const DetectionLabPanel: React.FC = () => {
           <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
             Kiểm tra nhận diện (pipeline offline)
           </h3>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Kéo thả hoặc chọn ảnh/video — YOLO + tracker + OCR (CONFIRMED) giống pipeline.
-          </p>
         </div>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end">

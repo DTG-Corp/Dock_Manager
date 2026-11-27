@@ -132,13 +132,7 @@ export const StatisticsFiltersBar: React.FC<StatisticsFiltersBarProps> = ({
         </FilterField>
       </TableFilterPanel>
 
-      <div className="flex flex-wrap gap-2 justify-between items-center">
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 max-w-xl leading-relaxed">
-          Bảng ẩn <span className="font-mono">schema_version</span> và <span className="font-mono">seq</span>{' '}
-          (vẫn có trong API / xuất Excel). Cột <span className="font-mono">ships_today</span> tương ứng{' '}
-          <span className="font-mono">ships_completed_today</span>, fallback nội bộ theo{' '}
-          <span className="font-mono">seq</span> nếu thiếu.
-        </p>
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <Button
           type="button"
           variant="outline"

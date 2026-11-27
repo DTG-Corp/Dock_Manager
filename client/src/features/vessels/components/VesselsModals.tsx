@@ -82,13 +82,11 @@ export const VesselsModals: React.FC<VesselsModalsProps> = ({
               <option value="monthly">Tàu Tháng — tính phí theo loại tàu</option>
               <option value="unclassified">Chưa Phân Loại — không tính phí</option>
             </select>
-            <p className="text-[10px] text-gray-400 ml-1 normal-case tracking-normal font-normal">
-              {classification === 'spot'
-                ? 'Phí gắn trực tiếp vào mã tàu này (cấu hình bên dưới sau khi lưu).'
-                : classification === 'monthly'
-                  ? 'Phí lấy theo Loại Tàu; cấu hình giá ở mục Doanh Thu › Cấu Hình Phí.'
-                  : 'Tàu từ nhận diện chưa gán loại — hệ thống không sinh hóa đơn.'}
-            </p>
+            {classification === 'spot' ? (
+              <p className="text-[10px] text-gray-400 ml-1 normal-case tracking-normal font-normal">
+                Phí gắn trực tiếp vào mã tàu này (cấu hình bên dưới sau khi lưu).
+              </p>
+            ) : null}
           </div>
           {classification === 'monthly' && (
             <div className="space-y-1">

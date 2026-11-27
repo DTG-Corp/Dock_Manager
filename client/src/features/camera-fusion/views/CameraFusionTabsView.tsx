@@ -20,15 +20,6 @@ export const CameraFusionTabsView: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
-          Ghép Camera
-        </h1>
-        <p className="text-sm text-gray-500">
-          Quản lý camera đơn và cấu hình group camera cho fused frame.
-        </p>
-      </div>
-
       <div className="flex w-fit space-x-1 overflow-x-auto rounded-xl bg-gray-100 p-1 dark:bg-white/5">
         {TABS.map((tab) => {
           const Icon = tab.icon;

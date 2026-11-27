@@ -106,9 +106,6 @@ export const FusionGroupEditorView: React.FC = () => {
             <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
               Fusion Group Editor
             </h1>
-            <p className="text-sm text-gray-500">
-              FE chỉ pick cấu hình. Fused preview thật được BE render và dùng lại cho YOLO.
-            </p>
           </div>
           <Button onClick={save} disabled={isSaving} className="flex items-center gap-2">
             <Save className="h-4 w-4" />
@@ -205,10 +202,6 @@ const SeamAnchorPanel: React.FC<{
         <p className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300">
           Seam Anchor — nền cảng tham chiếu
         </p>
-        <p className="text-xs text-gray-500">
-          Chụp frame "cảng trống không có tàu" làm background. Khi tàu neo bị chia 2 camera ở vùng giáp ranh,
-          mô hình so sánh với nền này để giữ ID đang neo và tính thời gian đúng.
-        </p>
       </div>
       {!groupSaved ? (
         <p className="mb-2 text-xs text-amber-600 dark:text-amber-400">
@@ -246,10 +239,6 @@ const CameraOrderPanel: React.FC<{
     <div className="mb-4">
       <p className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300">
         Thứ tự camera trái sang phải
-      </p>
-      <p className="text-xs text-gray-500">
-        Thứ tự trái → phải dọc theo luồng tàu. Chỉ dùng cho Re-ID hybrid (match camera liền kề).
-        Vị trí tile trên canvas vẫn chỉnh bằng X/Y.
       </p>
     </div>
     {members.length < 2 ? (
